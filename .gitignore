@@ -1,0 +1,10 @@
+# Binaries for programs and plugins
+*.patch
+vendor/
+bin/
+
+# Test binary
+*.test
+
+# Jetbrains
+.idea

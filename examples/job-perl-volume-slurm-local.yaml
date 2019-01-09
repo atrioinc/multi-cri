@@ -1,0 +1,53 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-perl-slurm-vol-pod
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        name: job-slurm-template
+    spec:
+      runtimeClassName: cri.babelfish
+      containers:
+      - name: job-slurm-container
+        image: cri.babelfish/local-def-file.singularity.def:latest
+        command: ["sleep", "60", "&&", "ls", "/"]
+        env:
+        - name: CLUSTER_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: local-secret
+              key: username
+        - name: CLUSTER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: local-secret
+              key: password
+        - name: CLUSTER_HOST
+          valueFrom:
+            secretKeyRef:
+              name: local-secret
+              key: host
+        - name: CLUSTER_PORT
+          valueFrom:
+            secretKeyRef:
+              name: local-secret
+              key: port
+        - name: JOB_QUEUE
+          valueFrom:
+            secretKeyRef:
+              name: local-secret
+              key: queue
+        volumeMounts:
+        # name must match the volume name below
+          - name: my-pvc-nfs
+            mountPath: "cri.babelfish"
+      restartPolicy: Never
+      nodeSelector:
+        beta.kubernetes.io/arch: amd64
+      volumes:
+      - name: my-pvc-nfs
+        persistentVolumeClaim:
+          claimName: nfs-v1
