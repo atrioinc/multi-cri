@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"cri-babelfish/pkg/cri/network"
+	"multi-cri/pkg/cri/network"
 
 	"github.com/jorgesece/skv"
 

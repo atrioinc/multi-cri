@@ -22,7 +22,7 @@ import (
 	"testing"
 	"time"
 
-	"cri-babelfish/pkg/cri/common"
+	"multi-cri/pkg/cri/common"
 
 	"k8s.io/klog"
 )

@@ -21,17 +21,17 @@ import (
 	"github.com/spf13/pflag"
 )
 
-const defaultUnixSock = "/var/run/cri-babelfish.sock"
+const defaultUnixSock = "/var/run/multi-cri.sock"
 
-// CRIBabelfishOptions contains cri-babelfish command line options.
-type CRIBabelFishOptions struct {
+// CRIMulticriOptions contains multi-cri command line options.
+type CRIMulticriOptions struct {
 	//Adapter Name
 	AdapterName string
-	// SocketPath is the path to the socket which cri-babelfish serves on.
+	// SocketPath is the path to the socket which multi-cri serves on.
 	SocketPath string
-	// PrintVersion indicates to print version information of cri-babelfish.
+	// PrintVersion indicates to print version information of multi-cri.
 	PrintVersion bool
-	// CRIEndpoint is the babelfish endpoint path.
+	// CRIEndpoint is the multicri endpoint path.
 	CRIEndpoint string
 	//Enable Pod Network
 	EnablePodNetwork bool
@@ -43,7 +43,7 @@ type CRIBabelFishOptions struct {
 	StreamServerAddress string
 	// StreamServerPort is the port streaming server is listening on.
 	StreamServerPort string
-	// CgroupPath is the path for the cgroup that cri-babelfish is placed in.
+	// CgroupPath is the path for the cgroup that multi-cri is placed in.
 	CgroupPath string
 	// EnableSelinux indicates to enable the selinux support
 	EnableSelinux bool
@@ -59,17 +59,17 @@ type CRIBabelFishOptions struct {
 	ImageRemoteMountPath string
 }
 
-// NewCRIBabelfishOptions
-func NewCRIBabelFishOptions() *CRIBabelFishOptions {
-	return &CRIBabelFishOptions{}
+// NewCRIMulticriOptions
+func NewCRIMulticriOptions() *CRIMulticriOptions {
+	return &CRIMulticriOptions{}
 }
 
-// AddFlags adds cri-babelfish command line options to pflag.
-func (c *CRIBabelFishOptions) AddFlags(fs *pflag.FlagSet) {
+// AddFlags adds multi-cri command line options to pflag.
+func (c *CRIMulticriOptions) AddFlags(fs *pflag.FlagSet) {
 	fs.StringVar(&c.AdapterName, "adapter-name",
 		"fale", "Adapter name. For instance, \"slurm\" is supported")
 	fs.StringVar(&c.SocketPath, "socket-path",
-		defaultUnixSock, "Path to the socket which cri-babelfish serves on.")
+		defaultUnixSock, "Path to the socket which multi-cri serves on.")
 	fs.BoolVar(&c.EnablePodNetwork, "enable-pod-network", false,
 		"Enable pod network namespace")
 	fs.StringVar(&c.NetworkPluginBinDir, "network-bin-dir",
@@ -82,7 +82,7 @@ func (c *CRIBabelFishOptions) AddFlags(fs *pflag.FlagSet) {
 		"10010", "The port streaming server is listening on.")
 	fs.StringVar(&c.SandboxImage, "sandbox-image",
 		"gcr.io/google_containers/pause:3.0", "The image used by sandbox container.")
-	fs.StringVar(&c.ResourceCachePath, "resources-cache-path", getHomeDir()+"/.cri-babelfish/",
+	fs.StringVar(&c.ResourceCachePath, "resources-cache-path", getHomeDir()+"/.multi-cri/",
 		"Path where image, container and sandbox information will be stored. It will also be the image pool path")
 	fs.BoolVar(&c.EnablePodPersistence, "enable-pod-persistence", false,
 		"Enable pod and container persistence in cache file")

@@ -20,7 +20,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"cri-babelfish/pkg/cri/store"
+	"multi-cri/pkg/cri/store"
 
 	"github.com/containerd/cgroups"
 	"github.com/cri-o/ocicni/pkg/ocicni"
@@ -96,7 +96,7 @@ func parseDNSOptions(servers, searches, options []string) (string, error) {
 
 // ensureImageExists returns corresponding metadata of the image reference, if image is not
 // pulled yet, the function will pull the image.
-func (c *BabelFishRuntime) ensureImageExists(ctx context.Context, ref string) (*store.ImageMetadata, error) {
+func (c *MulticriRuntime) ensureImageExists(ctx context.Context, ref string) (*store.ImageMetadata, error) {
 	image, err := c.imageStore.GetByPath(ref) //todo(jorgesece): remove, it is not used/tested
 	/*if _, err := os.Stat("/path/to/whatever"); !os.IsNotExist(err) {
 		return image, nil

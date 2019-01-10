@@ -15,10 +15,10 @@
 package runtime
 
 import (
-	"cri-babelfish/pkg/cri/common/file"
+	"multi-cri/pkg/cri/common/file"
 	"fmt"
 
-	"cri-babelfish/pkg/cri/store"
+	"multi-cri/pkg/cri/store"
 
 	"github.com/cri-o/ocicni/pkg/ocicni"
 	"golang.org/x/net/context"
@@ -37,8 +37,8 @@ const (
 	resolvConfPath = "/etc/resolv.conf"
 )
 
-func (r *BabelFishRuntime) RunPodSandbox(ctx context.Context, req *runtimeApi.RunPodSandboxRequest) (_ *runtimeApi.RunPodSandboxResponse, retErr error) {
-	klog.V(4).Infof("Creating BabelFish sandbox")
+func (r *MulticriRuntime) RunPodSandbox(ctx context.Context, req *runtimeApi.RunPodSandboxRequest) (_ *runtimeApi.RunPodSandboxResponse, retErr error) {
+	klog.V(4).Infof("Creating Multicri sandbox")
 	var err error
 	config := req.GetConfig()
 
@@ -81,11 +81,11 @@ func (r *BabelFishRuntime) RunPodSandbox(ctx context.Context, req *runtimeApi.Ru
 	}
 
 	r.sandboxStore.Update(sandbox)
-	klog.V(4).Infof("BabelFish sandbox successfully created")
+	klog.V(4).Infof("Multicri sandbox successfully created")
 	return response, nil
 }
 
-func (r *BabelFishRuntime) StopPodSandbox(ctx context.Context, req *runtimeApi.StopPodSandboxRequest) (*runtimeApi.StopPodSandboxResponse, error) {
+func (r *MulticriRuntime) StopPodSandbox(ctx context.Context, req *runtimeApi.StopPodSandboxRequest) (*runtimeApi.StopPodSandboxResponse, error) {
 	sandbox, errGet := r.sandboxStore.Get(req.GetPodSandboxId())
 	klog.V(4).Infof("Stopping sandbox with ID %s", req.GetPodSandboxId())
 	if errGet != nil {
@@ -114,11 +114,11 @@ func (r *BabelFishRuntime) StopPodSandbox(ctx context.Context, req *runtimeApi.S
 		sandbox.IP = ""
 		r.sandboxStore.Update(sandbox)
 	}
-	klog.V(4).Infof("BabelFish sandbox successfully stopped")
+	klog.V(4).Infof("Multicri sandbox successfully stopped")
 	return response, nil
 }
 
-func (r *BabelFishRuntime) RemovePodSandbox(ctx context.Context, req *runtimeApi.RemovePodSandboxRequest) (*runtimeApi.RemovePodSandboxResponse, error) {
+func (r *MulticriRuntime) RemovePodSandbox(ctx context.Context, req *runtimeApi.RemovePodSandboxRequest) (*runtimeApi.RemovePodSandboxResponse, error) {
 	sandbox, errGet := r.sandboxStore.Get(req.GetPodSandboxId())
 	klog.V(4).Infof("Removing sandbox with ID %s", req.GetPodSandboxId())
 	if errGet != nil {
@@ -144,11 +144,11 @@ func (r *BabelFishRuntime) RemovePodSandbox(ctx context.Context, req *runtimeApi
 	}
 
 	r.sandboxStore.Remove(sandbox.ID)
-	klog.V(4).Infof("BabelFish sandbox successfully removed")
+	klog.V(4).Infof("Multicri sandbox successfully removed")
 	return response, nil
 }
 
-func (r *BabelFishRuntime) PodSandboxStatus(ctx context.Context, req *runtimeApi.PodSandboxStatusRequest) (*runtimeApi.PodSandboxStatusResponse, error) {
+func (r *MulticriRuntime) PodSandboxStatus(ctx context.Context, req *runtimeApi.PodSandboxStatusRequest) (*runtimeApi.PodSandboxStatusResponse, error) {
 	sandbox, err := r.sandboxStore.Get(req.GetPodSandboxId())
 	klog.V(4).Infof("Getting status of sandbox with ID %s", req.GetPodSandboxId())
 	if err != nil {
@@ -178,9 +178,9 @@ func (r *BabelFishRuntime) PodSandboxStatus(ctx context.Context, req *runtimeApi
 	return response, err
 }
 
-func (r *BabelFishRuntime) ListPodSandbox(ctx context.Context, req *runtimeApi.ListPodSandboxRequest) (*runtimeApi.ListPodSandboxResponse, error) {
+func (r *MulticriRuntime) ListPodSandbox(ctx context.Context, req *runtimeApi.ListPodSandboxRequest) (*runtimeApi.ListPodSandboxResponse, error) {
 	klog.V(4).Infof("Listing sandboxes")
-	localResult := r.sandboxStore.ListK8s(req.Filter, r.remoteCRI.BabelFishRuntimeName())
+	localResult := r.sandboxStore.ListK8s(req.Filter, r.remoteCRI.MulticriRuntimeName())
 	remotePods, err := r.remoteCRI.ListPodSandbox(ctx, req)
 	if err != nil {
 		return nil, err
@@ -190,7 +190,7 @@ func (r *BabelFishRuntime) ListPodSandbox(ctx context.Context, req *runtimeApi.L
 	return &runtimeApi.ListPodSandboxResponse{Items: localResult}, nil
 }
 
-func (r *BabelFishRuntime) PortForward(ctx context.Context, req *runtimeApi.PortForwardRequest) (*runtimeApi.PortForwardResponse, error) {
+func (r *MulticriRuntime) PortForward(ctx context.Context, req *runtimeApi.PortForwardRequest) (*runtimeApi.PortForwardResponse, error) {
 	sandbox, errGet := r.sandboxStore.Get(req.GetPodSandboxId())
 	klog.V(4).Infof("Forwarding port of sandbox %s", req.GetPodSandboxId())
 	var runtimeClass string
@@ -212,7 +212,7 @@ func (r *BabelFishRuntime) PortForward(ctx context.Context, req *runtimeApi.Port
 }
 
 // setupNetSandboxFiles sets up necessary network sandbox files including /etc/hosts and /etc/resolv.conf.
-func (r *BabelFishRuntime) setupNetSandboxFiles(netDir string, config *runtimeApi.PodSandboxConfig) error {
+func (r *MulticriRuntime) setupNetSandboxFiles(netDir string, config *runtimeApi.PodSandboxConfig) error {
 	// TODO(random-liu): Consider whether we should maintain /etc/hosts and /etc/resolv.conf in kubelet.
 	sandboxEtcHosts := getSandboxHosts(netDir)
 	if err := r.os.CopyFile(etcHosts, sandboxEtcHosts, 0644); err != nil {
@@ -245,7 +245,7 @@ func (r *BabelFishRuntime) setupNetSandboxFiles(netDir string, config *runtimeAp
 	return nil
 }
 
-func (r *BabelFishRuntime) setupPodNetwork(sandbox *store.SandboxMetadata) (retErr error) {
+func (r *MulticriRuntime) setupPodNetwork(sandbox *store.SandboxMetadata) (retErr error) {
 	//Create Network Namespace if it is not in host network
 	hostNet := sandbox.Config.GetLinux().GetSecurityContext().GetNamespaceOptions().GetNetwork()
 	if hostNet == runtimeApi.NamespaceMode_POD {
@@ -315,7 +315,7 @@ func (r *BabelFishRuntime) setupPodNetwork(sandbox *store.SandboxMetadata) (retE
 	return nil
 }
 
-func (r *BabelFishRuntime) tearDownNetwork(sandbox *store.SandboxMetadata) error {
+func (r *MulticriRuntime) tearDownNetwork(sandbox *store.SandboxMetadata) error {
 	if _, err := r.os.Stat(sandbox.NetNSPath); err != nil {
 		if !r.os.IsNotExist(err) {
 			return fmt.Errorf("failed to stat network namespace path %s :%v", sandbox.NetNSPath, err)

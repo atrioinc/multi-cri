@@ -15,13 +15,13 @@
 package adapters
 
 import (
-	"cri-babelfish/pkg/cri/store"
+	"multi-cri/pkg/cri/store"
 
 	runtimeApi "k8s.io/kubernetes/pkg/kubelet/apis/cri/runtime/v1alpha2"
 	"k8s.io/kubernetes/pkg/kubelet/server/streaming"
 )
 
-const VolumeContainer = "/cri.babelfish"
+const VolumeContainer = "/multicri"
 
 type AdapterInterface interface {
 	//Sandbox

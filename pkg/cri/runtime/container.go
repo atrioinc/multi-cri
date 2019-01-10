@@ -18,14 +18,14 @@ import (
 	"fmt"
 	"time"
 
-	"cri-babelfish/pkg/cri/store"
+	"multi-cri/pkg/cri/store"
 
 	"golang.org/x/net/context"
 	"k8s.io/klog"
 	runtimeApi "k8s.io/kubernetes/pkg/kubelet/apis/cri/runtime/v1alpha2"
 )
 
-func (r *BabelFishRuntime) ReopenContainerLog(ctx context.Context, req *runtimeApi.ReopenContainerLogRequest) (*runtimeApi.ReopenContainerLogResponse, error) {
+func (r *MulticriRuntime) ReopenContainerLog(ctx context.Context, req *runtimeApi.ReopenContainerLogRequest) (*runtimeApi.ReopenContainerLogResponse, error) {
 	c, err := r.containerStore.Get(req.GetContainerId())
 	if err != nil {
 		return nil, fmt.Errorf("Container not found")
@@ -37,7 +37,7 @@ func (r *BabelFishRuntime) ReopenContainerLog(ctx context.Context, req *runtimeA
 	return &runtimeApi.ReopenContainerLogResponse{}, r.adapter.ReopenContainerLog(c)
 }
 
-func (r *BabelFishRuntime) CreateContainer(ctx context.Context, req *runtimeApi.CreateContainerRequest) (*runtimeApi.CreateContainerResponse, error) {
+func (r *MulticriRuntime) CreateContainer(ctx context.Context, req *runtimeApi.CreateContainerRequest) (*runtimeApi.CreateContainerResponse, error) {
 	var err error
 
 	podSandboxID := req.PodSandboxId
@@ -97,7 +97,7 @@ func (r *BabelFishRuntime) CreateContainer(ctx context.Context, req *runtimeApi.
 	return &runtimeApi.CreateContainerResponse{ContainerId: container.ID}, err
 }
 
-func (r *BabelFishRuntime) StartContainer(ctx context.Context, req *runtimeApi.StartContainerRequest) (*runtimeApi.StartContainerResponse, error) {
+func (r *MulticriRuntime) StartContainer(ctx context.Context, req *runtimeApi.StartContainerRequest) (*runtimeApi.StartContainerResponse, error) {
 	containerId := req.ContainerId
 	klog.V(4).Infof("Starting container %s", containerId)
 	cm, err := r.containerStore.Get(containerId)
@@ -137,7 +137,7 @@ func (r *BabelFishRuntime) StartContainer(ctx context.Context, req *runtimeApi.S
 	return response, err
 }
 
-func (r *BabelFishRuntime) StopContainer(ctx context.Context, req *runtimeApi.StopContainerRequest) (*runtimeApi.StopContainerResponse, error) {
+func (r *MulticriRuntime) StopContainer(ctx context.Context, req *runtimeApi.StopContainerRequest) (*runtimeApi.StopContainerResponse, error) {
 	containerId := req.ContainerId
 	klog.V(4).Infof("Stopping container %s", containerId)
 	cm, errGet := r.containerStore.Get(containerId)
@@ -171,9 +171,9 @@ func (r *BabelFishRuntime) StopContainer(ctx context.Context, req *runtimeApi.St
 	return &runtimeApi.StopContainerResponse{}, nil
 }
 
-func (r *BabelFishRuntime) ListContainers(ctx context.Context, req *runtimeApi.ListContainersRequest) (*runtimeApi.ListContainersResponse, error) {
+func (r *MulticriRuntime) ListContainers(ctx context.Context, req *runtimeApi.ListContainersRequest) (*runtimeApi.ListContainersResponse, error) {
 	klog.V(4).Infof("List containers")
-	babelCRI := r.remoteCRI.BabelFishRuntimeName()
+	babelCRI := r.remoteCRI.MulticriRuntimeName()
 	containers := r.containerStore.ListK8s(req.Filter.Id, req.Filter.PodSandboxId, req.Filter.LabelSelector, req.Filter.State, babelCRI)
 	remoteContainers, err := r.remoteCRI.ListContainers(ctx, req)
 	if err != nil {
@@ -183,7 +183,7 @@ func (r *BabelFishRuntime) ListContainers(ctx context.Context, req *runtimeApi.L
 	return &runtimeApi.ListContainersResponse{Containers: containers}, nil
 }
 
-func (r *BabelFishRuntime) RemoveContainer(ctx context.Context, req *runtimeApi.RemoveContainerRequest) (*runtimeApi.RemoveContainerResponse, error) {
+func (r *MulticriRuntime) RemoveContainer(ctx context.Context, req *runtimeApi.RemoveContainerRequest) (*runtimeApi.RemoveContainerResponse, error) {
 	containerId := req.ContainerId
 	klog.V(4).Infof("Removing container %s", containerId)
 	cm, errGet := r.containerStore.Get(containerId)
@@ -212,7 +212,7 @@ func (r *BabelFishRuntime) RemoveContainer(ctx context.Context, req *runtimeApi.
 	return &runtimeApi.RemoveContainerResponse{}, nil
 }
 
-func (r *BabelFishRuntime) ContainerStatus(ctx context.Context, req *runtimeApi.ContainerStatusRequest) (*runtimeApi.ContainerStatusResponse, error) {
+func (r *MulticriRuntime) ContainerStatus(ctx context.Context, req *runtimeApi.ContainerStatusRequest) (*runtimeApi.ContainerStatusResponse, error) {
 	containerId := req.ContainerId
 	klog.V(4).Infof("Getting status from container %s", containerId)
 	cm, errGet := r.containerStore.Get(containerId)
@@ -238,7 +238,7 @@ func (r *BabelFishRuntime) ContainerStatus(ctx context.Context, req *runtimeApi.
 	return response, nil
 }
 
-func (r *BabelFishRuntime) ListContainerStats(ctx context.Context, req *runtimeApi.ListContainerStatsRequest) (*runtimeApi.ListContainerStatsResponse, error) {
+func (r *MulticriRuntime) ListContainerStats(ctx context.Context, req *runtimeApi.ListContainerStatsRequest) (*runtimeApi.ListContainerStatsResponse, error) {
 	klog.V(4).Info("List container stats")
 	_, err := r.sandboxStore.Get(req.Filter.PodSandboxId)
 	if err != nil {
@@ -246,7 +246,7 @@ func (r *BabelFishRuntime) ListContainerStats(ctx context.Context, req *runtimeA
 	}
 
 	stats := []*runtimeApi.ContainerStats{}
-	for _, K8Container := range r.containerStore.ListK8s(req.Filter.Id, req.Filter.GetPodSandboxId(), req.Filter.LabelSelector, nil, r.remoteCRI.BabelFishRuntimeName()) {
+	for _, K8Container := range r.containerStore.ListK8s(req.Filter.Id, req.Filter.GetPodSandboxId(), req.Filter.LabelSelector, nil, r.remoteCRI.MulticriRuntimeName()) {
 		attributes := runtimeApi.ContainerAttributes{K8Container.Id,
 			K8Container.Metadata, K8Container.Labels,
 			K8Container.Annotations,
@@ -261,7 +261,7 @@ func (r *BabelFishRuntime) ListContainerStats(ctx context.Context, req *runtimeA
 	return &runtimeApi.ListContainerStatsResponse{Stats: stats}, nil
 }
 
-func (r *BabelFishRuntime) ContainerStats(ctx context.Context, req *runtimeApi.ContainerStatsRequest) (*runtimeApi.ContainerStatsResponse, error) {
+func (r *MulticriRuntime) ContainerStats(ctx context.Context, req *runtimeApi.ContainerStatsRequest) (*runtimeApi.ContainerStatsResponse, error) {
 	containerId := req.ContainerId
 	klog.V(4).Infof("Getting stats from container %s", containerId)
 	container, err := r.containerStore.Get(containerId)
@@ -286,7 +286,7 @@ func (r *BabelFishRuntime) ContainerStats(ctx context.Context, req *runtimeApi.C
 
 }
 
-func (r *BabelFishRuntime) UpdateContainerResources(ctx context.Context, req *runtimeApi.UpdateContainerResourcesRequest) (*runtimeApi.UpdateContainerResourcesResponse, error) {
+func (r *MulticriRuntime) UpdateContainerResources(ctx context.Context, req *runtimeApi.UpdateContainerResourcesRequest) (*runtimeApi.UpdateContainerResourcesResponse, error) {
 	klog.V(4).Infof("Updating container resources%s", req.GetContainerId())
 	cm, err := r.containerStore.Get(req.GetContainerId())
 	if err != nil {

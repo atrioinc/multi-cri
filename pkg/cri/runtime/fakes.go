@@ -19,10 +19,10 @@ import (
 	"io"
 	"os"
 
-	"cri-babelfish/pkg/cri/network"
-	"cri-babelfish/pkg/cri/store"
+	"multi-cri/pkg/cri/network"
+	"multi-cri/pkg/cri/store"
 
-	"cri-babelfish/pkg/cri/runtime/remote"
+	"multi-cri/pkg/cri/runtime/remote"
 
 	"github.com/cri-o/ocicni/pkg/ocicni"
 	"golang.org/x/net/context"
@@ -94,7 +94,7 @@ func newFakeStreamServer() streaming.Server {
 }
 
 //FAKE SINGULARITY SERVICE
-func NewFakeCRIService(adapterFails bool) CRIBabelFishService {
+func NewFakeCRIService(adapterFails bool) CRIMulticriService {
 	iStorage, err := store.NewImageStorage("", false)
 	if err != nil {
 		panic(err)
@@ -107,7 +107,7 @@ func NewFakeCRIService(adapterFails bool) CRIBabelFishService {
 	if err != nil {
 		panic(err)
 	}
-	f := criBabelfishService{
+	f := multicriService{
 		netPlugin:        NewFackeCNIPlugin(),
 		sandboxStore:     sandboxStorage,
 		containerStore:   containerStorage,
@@ -119,8 +119,8 @@ func NewFakeCRIService(adapterFails bool) CRIBabelFishService {
 		remoteCRI:        &remote.RemoteCRIConfiguration{},
 	}
 
-	babelFishRuntime := NewBabelFishRuntime(&f)
-	return babelFishRuntime
+	multicriRuntime := NewMulticriRuntime(&f)
+	return multicriRuntime
 }
 
 //////////////////

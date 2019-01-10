@@ -20,14 +20,14 @@ import (
 	"os"
 	"syscall"
 
-	"cri-babelfish/pkg/cri/network"
-	"cri-babelfish/pkg/cri/store"
-	osinterface "cri-babelfish/pkg/os"
+	"multi-cri/pkg/cri/network"
+	"multi-cri/pkg/cri/store"
+	osinterface "multi-cri/pkg/os"
 
-	"cri-babelfish/pkg/cri/adapters"
-	slurmAdapter "cri-babelfish/pkg/cri/adapters/slurm"
+	"multi-cri/pkg/cri/adapters"
+	slurmAdapter "multi-cri/pkg/cri/adapters/slurm"
 
-	"cri-babelfish/pkg/cri/runtime/remote"
+	"multi-cri/pkg/cri/runtime/remote"
 
 	"github.com/cri-o/ocicni/pkg/ocicni"
 	"google.golang.org/grpc"
@@ -42,26 +42,26 @@ const (
 )
 
 // CRISingularityService is the interface implement CRI remote service server.
-type CRIBabelFishService interface {
+type CRIMulticriService interface {
 	Run() error
 	Stop()
 	runtimeapi.RuntimeServiceServer
 	runtimeapi.ImageServiceServer
 }
 
-// criBabelfishService implements CRIBabelfishService.
-type criBabelfishService struct {
+// multicriService implements CRIMulticriService.
+type multicriService struct {
 	// Exec path
 	adapter adapters.AdapterInterface
 	// serverAddress is the grpc server unix path.
 	serverAddress string
 	// server is the grpc server.
 	server *grpc.Server
-	// rootDir is the directory for managing cri-babelfish files.
+	// rootDir is the directory for managing multi-cri files.
 	rootDir string
 	// sandboxImage is the image to use for sandbox container.
 	sandboxImage string
-	// snapshotter is the snapshotter to use in babelfish.
+	// snapshotter is the snapshotter to use in multicri.
 	snapshotter string
 	// sandboxStore stores all resources associated with sandboxes.
 	sandboxStore store.SandboxStoreInterface
@@ -92,7 +92,7 @@ func loadAdapter(adapterName string) (adapters.AdapterInterface, error) {
 	}
 }
 
-func NewBabelFishService(
+func NewMulticriService(
 	adapterName,
 	socketPath,
 	networkPluginBinDir,
@@ -105,7 +105,7 @@ func NewBabelFishService(
 	enablePodPersistence bool,
 	enableNetworkPersistence bool,
 	remoteCRIEndpoints string,
-) (CRIBabelFishService, error) {
+) (CRIMulticriService, error) {
 	criAdapter, err := loadAdapter(adapterName)
 	if err != nil {
 		return nil, err
@@ -137,7 +137,7 @@ func NewBabelFishService(
 	if err != nil {
 		return nil, err
 	}
-	c := &criBabelfishService{
+	c := &multicriService{
 		serverAddress:    socketPath,
 		sandboxImage:     sandboxImage,
 		networkNamespace: network.NewNetworkCNIManager(),
@@ -170,16 +170,16 @@ func NewBabelFishService(
 	}
 	// Create the grpc server and register runtime and image services.
 	c.server = grpc.NewServer()
-	babelFishRuntime := NewBabelFishRuntime(c)
-	runtimeapi.RegisterImageServiceServer(c.server, babelFishRuntime)
-	runtimeapi.RegisterRuntimeServiceServer(c.server, babelFishRuntime)
+	multicriRuntime := NewMulticriRuntime(c)
+	runtimeapi.RegisterImageServiceServer(c.server, multicriRuntime)
+	runtimeapi.RegisterRuntimeServiceServer(c.server, multicriRuntime)
 
-	return babelFishRuntime, nil
+	return multicriRuntime, nil
 }
 
-// Run starts the cri-babelfish service.
-func (c *criBabelfishService) Run() error {
-	klog.V(2).Info("Start cri-babelfish service")
+// Run starts the multi-cri service.
+func (c *multicriService) Run() error {
+	klog.V(2).Info("Start multi-cri service")
 	// Start event handler.
 	klog.V(2).Info("Start event monitor")
 	// Start streaming server.
@@ -213,7 +213,7 @@ func (c *criBabelfishService) Run() error {
 		close(grpcServerCloseCh)
 	}()
 
-	// Stop the whole cri-babelfish service if any of the critical service exits.
+	// Stop the whole multi-cri service if any of the critical service exits.
 	select {
 	case <-streamServerCloseCh:
 	case <-grpcServerCloseCh:
@@ -227,14 +227,14 @@ func (c *criBabelfishService) Run() error {
 	return nil
 }
 
-// Stop stops the cri-babelfish service.
-func (c *criBabelfishService) Stop() {
-	klog.V(2).Info("Stop cri-babelfish service")
+// Stop stops the multi-cri service.
+func (c *multicriService) Stop() {
+	klog.V(2).Info("Stop multi-cri service")
 	c.streamServer.Stop() // nolint: errcheck
 	c.server.Stop()
 }
 
-func (c *criBabelfishService) GetContainer(sandBoxId string, containerID string) (*store.ContainerMetadata, error) {
+func (c *multicriService) GetContainer(sandBoxId string, containerID string) (*store.ContainerMetadata, error) {
 
 	klog.V(4).Infof("Getting status of sandbox with ID in Service%s", sandBoxId)
 	out := c.containerStore.List(containerID, sandBoxId)

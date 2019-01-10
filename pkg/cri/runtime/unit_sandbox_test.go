@@ -21,7 +21,7 @@ import (
 	runtimeapi "k8s.io/kubernetes/pkg/kubelet/apis/cri/runtime/v1alpha2"
 )
 
-func createPod(podName string, service CRIBabelFishService) (string, error) {
+func createPod(podName string, service CRIMulticriService) (string, error) {
 	req := NewCreateSandboxRequest(podName, "")
 	response, err := service.RunPodSandbox(nil, &req)
 	if err != nil {

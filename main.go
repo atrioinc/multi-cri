@@ -17,8 +17,8 @@ package main
 import (
 	"os"
 
-	"cri-babelfish/pkg/cmd"
-	"cri-babelfish/pkg/cri/runtime"
+	"multi-cri/pkg/cmd"
+	"multi-cri/pkg/cri/runtime"
 
 	"k8s.io/klog"
 	"github.com/opencontainers/selinux/go-selinux"
@@ -29,7 +29,7 @@ import (
 )
 
 func main() {
-	o := cmd.NewCRIBabelFishOptions()
+	o := cmd.NewCRIMulticriOptions()
 	o.AddFlags(pflag.CommandLine)
 	flag.InitFlags()
 	logs.InitLogs()
@@ -39,9 +39,9 @@ func main() {
 		selinux.SetDisabled()
 	}
 
-	klog.V(2).Infof("Run cri-babelfish grpc server on socket %q", o.SocketPath)
-	klog.Infof("Run cri-babelfish grpc server on socket")
-	s, err := runtime.NewBabelFishService(
+	klog.V(2).Infof("Run multi-cri grpc server on socket %q", o.SocketPath)
+	klog.Infof("Run multi-cri grpc server on socket")
+	s, err := runtime.NewMulticriService(
 		o.AdapterName,
 		o.SocketPath,
 		o.NetworkPluginBinDir,
@@ -57,11 +57,11 @@ func main() {
 	)
 
 	if err != nil {
-		klog.Exitf("Failed to create CRI babelfish service %+v: %v", o, err)
+		klog.Exitf("Failed to create CRI multicri service %+v: %v", o, err)
 	}
 	// Use interrupt handler to make sure the server to be stopped properly.
 	h := interrupt.New(func(os.Signal) {}, s.Stop)
 	if err := h.Run(func() error { return s.Run() }); err != nil {
-		klog.Exitf("Failed to run cri-babelfish grpc server: %v", err)
+		klog.Exitf("Failed to run multi-cri grpc server: %v", err)
 	}
 }

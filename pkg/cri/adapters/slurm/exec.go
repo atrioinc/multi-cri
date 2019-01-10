@@ -15,7 +15,7 @@
 package slurm
 
 import (
-	"cri-babelfish/pkg/cri/store"
+	"multi-cri/pkg/cri/store"
 	"fmt"
 
 	runtimeApi "k8s.io/kubernetes/pkg/kubelet/apis/cri/runtime/v1alpha2"

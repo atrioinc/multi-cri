@@ -21,7 +21,7 @@ import (
 	"os"
 	"sync"
 
-	osInterface "cri-babelfish/pkg/os"
+	osInterface "multi-cri/pkg/os"
 
 	"golang.org/x/net/context"
 )

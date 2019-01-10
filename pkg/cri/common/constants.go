@@ -15,7 +15,7 @@
 package common
 
 const (
-	CRIBabelFishkey     = "cri.babelfish"
+	CRIMulticrikey     = "multicri"
 	CRIProxyAnnotation  = "kubernetes.io/target-runtime"
 	DefaultMaxLogLength = 100
 )

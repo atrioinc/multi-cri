@@ -15,14 +15,14 @@
 package cmd
 
 import (
-	"cri-babelfish/pkg/cri/common/file"
-	"cri-babelfish/pkg/cri/common/ssh"
+	"multi-cri/pkg/cri/common/file"
+	"multi-cri/pkg/cri/common/ssh"
 	"path"
 
 	"os"
 
 	"bytes"
-	"cri-babelfish/pkg/cri/common"
+	"multi-cri/pkg/cri/common"
 	"fmt"
 	"io"
 	"strconv"
@@ -30,7 +30,7 @@ import (
 
 	"io/ioutil"
 
-	"cri-babelfish/pkg/cri/store"
+	"multi-cri/pkg/cri/store"
 
 	"k8s.io/klog"
 )

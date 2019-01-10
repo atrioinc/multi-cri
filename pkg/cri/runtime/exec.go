@@ -22,7 +22,7 @@ import (
 	runtimeApi "k8s.io/kubernetes/pkg/kubelet/apis/cri/runtime/v1alpha2"
 )
 
-func (r *BabelFishRuntime) Attach(ctx context.Context, req *runtimeApi.AttachRequest) (*runtimeApi.AttachResponse, error) {
+func (r *MulticriRuntime) Attach(ctx context.Context, req *runtimeApi.AttachRequest) (*runtimeApi.AttachResponse, error) {
 	containerId := req.ContainerId
 	klog.V(4).Infof("Attaching in container %s", containerId)
 	container, err := r.containerStore.Get(containerId)
@@ -42,7 +42,7 @@ func (r *BabelFishRuntime) Attach(ctx context.Context, req *runtimeApi.AttachReq
 	return r.adapter.Attach(container, req)
 }
 
-func (r *BabelFishRuntime) Exec(ctx context.Context, req *runtimeApi.ExecRequest) (*runtimeApi.ExecResponse, error) {
+func (r *MulticriRuntime) Exec(ctx context.Context, req *runtimeApi.ExecRequest) (*runtimeApi.ExecResponse, error) {
 	containerId := req.ContainerId
 	klog.V(4).Infof("Executing command in container %s", containerId)
 	container, err := r.containerStore.Get(containerId)
@@ -62,7 +62,7 @@ func (r *BabelFishRuntime) Exec(ctx context.Context, req *runtimeApi.ExecRequest
 	return r.adapter.Exec(container, req)
 }
 
-func (r *BabelFishRuntime) ExecSync(ctx context.Context, req *runtimeApi.ExecSyncRequest) (*runtimeApi.ExecSyncResponse, error) {
+func (r *MulticriRuntime) ExecSync(ctx context.Context, req *runtimeApi.ExecSyncRequest) (*runtimeApi.ExecSyncResponse, error) {
 	containerId := req.ContainerId
 	klog.V(4).Infof("Executing synchronous command in container %s", containerId)
 	container, err := r.containerStore.Get(containerId)

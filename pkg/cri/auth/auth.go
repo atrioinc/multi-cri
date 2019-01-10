@@ -15,7 +15,7 @@
 package auth
 
 import (
-	"cri-babelfish/pkg/cri/store"
+	"multi-cri/pkg/cri/store"
 	"fmt"
 
 	"k8s.io/klog"

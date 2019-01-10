@@ -18,12 +18,12 @@ import (
 	"strings"
 	"testing"
 
-	"cri-babelfish/pkg/cri/store"
+	"multi-cri/pkg/cri/store"
 
 	runtimeapi "k8s.io/kubernetes/pkg/kubelet/apis/cri/runtime/v1alpha2"
 )
 
-func createContaier(container string, service CRIBabelFishService) (string, error) {
+func createContaier(container string, service CRIMulticriService) (string, error) {
 	podName := FAKESANDBOXID
 	podId, err := createPod(podName, service)
 	if err != nil {

@@ -15,8 +15,8 @@
 package builder
 
 import (
-	"cri-babelfish/pkg/cri/common/file"
-	"cri-babelfish/pkg/cri/store"
+	"multi-cri/pkg/cri/common/file"
+	"multi-cri/pkg/cri/store"
 	"fmt"
 	"strings"
 )

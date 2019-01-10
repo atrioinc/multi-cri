@@ -15,7 +15,7 @@
 package slurm
 
 import (
-	"cri-babelfish/pkg/cri/store"
+	"multi-cri/pkg/cri/store"
 	"fmt"
 
 	"time"
@@ -25,7 +25,7 @@ import (
 
 func (s SlurmAdapter) PullImage(image *store.ImageMetadata) error {
 	if image.RepoType == store.UnknownImageRepo {
-		return fmt.Errorf("Image repository type not supported by CRI-Babelfish %s ", image.RemotePath)
+		return fmt.Errorf("Image repository type not supported by multi-cri %s ", image.RemotePath)
 	}
 	container := &store.ContainerMetadata{Image: image}
 	return s.Builder.PullImage(container)

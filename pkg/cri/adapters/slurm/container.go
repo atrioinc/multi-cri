@@ -15,20 +15,20 @@
 package slurm
 
 import (
-	"cri-babelfish/pkg/cri/adapters/slurm/builder"
-	"cri-babelfish/pkg/cri/adapters/slurm/cmd"
+	"multi-cri/pkg/cri/adapters/slurm/builder"
+	"multi-cri/pkg/cri/adapters/slurm/cmd"
 	"fmt"
 
-	"cri-babelfish/pkg/cri/store"
+	"multi-cri/pkg/cri/store"
 
 	"strconv"
 
-	"cri-babelfish/pkg/cri/common"
+	"multi-cri/pkg/cri/common"
 	"strings"
 
 	"path/filepath"
 
-	"cri-babelfish/pkg/cri/adapters"
+	"multi-cri/pkg/cri/adapters"
 
 	"k8s.io/klog"
 	runtimeApi "k8s.io/kubernetes/pkg/kubelet/apis/cri/runtime/v1alpha2"

@@ -15,7 +15,7 @@
 package slurm
 
 import (
-	"cri-babelfish/pkg/cri/store"
+	"multi-cri/pkg/cri/store"
 )
 
 func (r SlurmAdapter) RunPodSandbox(metadata *store.SandboxMetadata) error {

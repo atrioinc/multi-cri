@@ -17,14 +17,14 @@ package runtime
 import (
 	"fmt"
 
-	"cri-babelfish/pkg/cri/store"
+	"multi-cri/pkg/cri/store"
 
 	"golang.org/x/net/context"
 	"k8s.io/klog"
 	runtimeApi "k8s.io/kubernetes/pkg/kubelet/apis/cri/runtime/v1alpha2"
 )
 
-func (r *BabelFishRuntime) PullImage(ctx context.Context, req *runtimeApi.PullImageRequest) (res *runtimeApi.PullImageResponse, err error) {
+func (r *MulticriRuntime) PullImage(ctx context.Context, req *runtimeApi.PullImageRequest) (res *runtimeApi.PullImageResponse, err error) {
 	klog.V(4).Infof("Pulling image... %s", req.Image.Image)
 
 	response, err := r.remoteCRI.PullImage(ctx, req)
@@ -54,7 +54,7 @@ func (r *BabelFishRuntime) PullImage(ctx context.Context, req *runtimeApi.PullIm
 	return &runtimeApi.PullImageResponse{ImageRef: imageMetadata.RemotePath}, nil
 }
 
-func (r *BabelFishRuntime) ListImages(ctx context.Context, req *runtimeApi.ListImagesRequest) (res *runtimeApi.ListImagesResponse, err error) {
+func (r *MulticriRuntime) ListImages(ctx context.Context, req *runtimeApi.ListImagesRequest) (res *runtimeApi.ListImagesResponse, err error) {
 	klog.V(4).Infof("List images")
 	images := r.imageStore.ListK8s(req.Filter)
 
@@ -68,7 +68,7 @@ func (r *BabelFishRuntime) ListImages(ctx context.Context, req *runtimeApi.ListI
 	return &runtimeApi.ListImagesResponse{Images: images}, nil
 }
 
-func (r *BabelFishRuntime) ImageStatus(ctx context.Context, req *runtimeApi.ImageStatusRequest) (*runtimeApi.ImageStatusResponse, error) {
+func (r *MulticriRuntime) ImageStatus(ctx context.Context, req *runtimeApi.ImageStatusRequest) (*runtimeApi.ImageStatusResponse, error) {
 	klog.V(4).Infof("Getting image status... %s", req.Image.Image)
 
 	response, err := r.remoteCRI.ImageStatus(ctx, req)
@@ -90,7 +90,7 @@ func (r *BabelFishRuntime) ImageStatus(ctx context.Context, req *runtimeApi.Imag
 	return &runtimeApi.ImageStatusResponse{Image: imageStatus}, nil
 }
 
-func (r *BabelFishRuntime) RemoveImage(ctx context.Context, req *runtimeApi.RemoveImageRequest) (_ *runtimeApi.RemoveImageResponse, err error) {
+func (r *MulticriRuntime) RemoveImage(ctx context.Context, req *runtimeApi.RemoveImageRequest) (_ *runtimeApi.RemoveImageResponse, err error) {
 	klog.V(4).Infof("Removing image... %s", req.Image.Image)
 	response, err := r.remoteCRI.RemoveImage(ctx, req)
 	if response != nil {
@@ -113,7 +113,7 @@ func (r *BabelFishRuntime) RemoveImage(ctx context.Context, req *runtimeApi.Remo
 	return &runtimeApi.RemoveImageResponse{}, nil
 }
 
-func (r *BabelFishRuntime) ImageFsInfo(ctx context.Context, req *runtimeApi.ImageFsInfoRequest) (*runtimeApi.ImageFsInfoResponse, error) {
+func (r *MulticriRuntime) ImageFsInfo(ctx context.Context, req *runtimeApi.ImageFsInfoRequest) (*runtimeApi.ImageFsInfoResponse, error) {
 	klog.V(4).Info("ImageFsInfo")
 	remoteRuntime, err := r.remoteCRI.GetRemoteRuntime("default")
 	if err != nil {

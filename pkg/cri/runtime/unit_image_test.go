@@ -18,9 +18,9 @@ import (
 	"strings"
 	"testing"
 
-	"cri-babelfish/pkg/cri/store"
+	"multi-cri/pkg/cri/store"
 
-	"cri-babelfish/pkg/cri/common/file"
+	"multi-cri/pkg/cri/common/file"
 
 	runtimeapi "k8s.io/kubernetes/pkg/kubelet/apis/cri/runtime/v1alpha2"
 )
@@ -90,7 +90,7 @@ func TestUnitPullImageLocal(t *testing.T) {
 	}
 }
 
-func pullImage(image string, service CRIBabelFishService) (*runtimeapi.PullImageResponse, error) {
+func pullImage(image string, service CRIMulticriService) (*runtimeapi.PullImageResponse, error) {
 
 	pod := FAKESANDBOXID
 	req := NewPullImageRequest(image, pod, map[string]string{})

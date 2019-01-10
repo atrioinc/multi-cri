@@ -17,8 +17,8 @@ package runtime
 import (
 	"fmt"
 
-	"cri-babelfish/pkg/cri/adapters"
-	"cri-babelfish/pkg/cri/store"
+	"multi-cri/pkg/cri/adapters"
+	"multi-cri/pkg/cri/store"
 	"net"
 
 	"golang.org/x/net/context"
@@ -28,19 +28,19 @@ import (
 )
 
 // instrumentedService wraps service and logs each operation.
-type BabelFishRuntime struct {
-	*criBabelfishService
+type MulticriRuntime struct {
+	*multicriService
 }
 
-func NewBabelFishRuntime(c *criBabelfishService) CRIBabelFishService {
-	return &BabelFishRuntime{criBabelfishService: c}
+func NewMulticriRuntime(c *multicriService) CRIMulticriService {
+	return &MulticriRuntime{multicriService: c}
 }
 
-func (r *BabelFishRuntime) Version(_ context.Context, req *runtimeApi.VersionRequest) (*runtimeApi.VersionResponse, error) {
+func (r *MulticriRuntime) Version(_ context.Context, req *runtimeApi.VersionRequest) (*runtimeApi.VersionResponse, error) {
 	return r.adapter.Version()
 }
 
-func (r *BabelFishRuntime) Status(_ context.Context, req *runtimeApi.StatusRequest) (*runtimeApi.StatusResponse, error) {
+func (r *MulticriRuntime) Status(_ context.Context, req *runtimeApi.StatusRequest) (*runtimeApi.StatusResponse, error) {
 	runtimeCondition := &runtimeApi.RuntimeCondition{
 		Type:   runtimeApi.RuntimeReady,
 		Status: true,
@@ -64,7 +64,7 @@ func (r *BabelFishRuntime) Status(_ context.Context, req *runtimeApi.StatusReque
 	}, nil
 }
 
-func (r *BabelFishRuntime) UpdateRuntimeConfig(_ context.Context, req *runtimeApi.UpdateRuntimeConfigRequest) (*runtimeApi.UpdateRuntimeConfigResponse, error) {
+func (r *MulticriRuntime) UpdateRuntimeConfig(_ context.Context, req *runtimeApi.UpdateRuntimeConfigRequest) (*runtimeApi.UpdateRuntimeConfigResponse, error) {
 	return &runtimeApi.UpdateRuntimeConfigResponse{}, nil
 }
 

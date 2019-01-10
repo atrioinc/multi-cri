@@ -53,9 +53,9 @@ func (r RemoteCRIConfiguration) ListImages(ctx context.Context, req *runtimeApi.
 }
 
 func (r RemoteCRIConfiguration) getImageManager(image string) (*RemoteCRIObject, string) {
-	imageBabelFish := BabelfishRuntimeHandler + "/"
-	if strings.HasPrefix(image, imageBabelFish) {
-		return nil, strings.TrimPrefix(image, imageBabelFish)
+	imageMulticri := MulticriRuntimeHandler + "/"
+	if strings.HasPrefix(image, imageMulticri) {
+		return nil, strings.TrimPrefix(image, imageMulticri)
 	}
 	for k, v := range r.remoteCRIList {
 		if strings.HasPrefix(image, k) {

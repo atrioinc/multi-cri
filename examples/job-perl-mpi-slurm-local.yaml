@@ -9,10 +9,10 @@ spec:
       labels:
         name: job-slurm-template
     spec:
-      runtimeClassName: cri.babelfish
+      runtimeClassName: multicri
       containers:
       - name: job-slurm-container
-        image: cri.babelfish/local-def-file.singularity.def:latest
+        image: multicri/local-def-file.singularity.def:latest
         command: ["sleep","60","&&","ls", "/"]
         env:
         - name: MPI_VERSION
@@ -51,7 +51,7 @@ spec:
         volumeMounts:
         # name must match the volume name below
         - name: my-pvc-nfs
-          mountPath: "cri.babelfish"
+          mountPath: "multicri"
       restartPolicy: Never
       nodeSelector:
         beta.kubernetes.io/arch: amd64

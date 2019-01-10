@@ -15,10 +15,10 @@
 package builder
 
 import (
-	"cri-babelfish/pkg/cri/auth"
-	"cri-babelfish/pkg/cri/common/cmd"
-	"cri-babelfish/pkg/cri/common/file"
-	"cri-babelfish/pkg/cri/store"
+	"multi-cri/pkg/cri/auth"
+	"multi-cri/pkg/cri/common/cmd"
+	"multi-cri/pkg/cri/common/file"
+	"multi-cri/pkg/cri/store"
 	"fmt"
 	"path"
 	"strings"

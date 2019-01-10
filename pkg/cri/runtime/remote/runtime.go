@@ -30,7 +30,7 @@ const (
 	ConnectionTimeoutSeconds = 20
 
 	maxMsgSize              = 1024 * 1024 * 16
-	BabelfishRuntimeHandler = "cri.babelfish"
+	MulticriRuntimeHandler = "multicri"
 )
 
 type RemoteCRIObject struct {
@@ -111,7 +111,7 @@ func LoadRemoteRuntimeConfiguration(config string) (*RemoteCRIConfiguration, err
 }
 
 func (r RemoteCRIConfiguration) GetRemoteRuntime(runtimeHandlerName string) (*RemoteCRIObject, error) {
-	if runtimeHandlerName == BabelfishRuntimeHandler || len(r.remoteCRIList) == 0 {
+	if runtimeHandlerName == MulticriRuntimeHandler || len(r.remoteCRIList) == 0 {
 		return nil, nil
 	}
 	if runtimeHandlerName == "" {
@@ -123,9 +123,9 @@ func (r RemoteCRIConfiguration) GetRemoteRuntime(runtimeHandlerName string) (*Re
 	return nil, fmt.Errorf("RemoteRuntime %s not found", runtimeHandlerName)
 }
 
-func (r RemoteCRIConfiguration) BabelFishRuntimeName() string {
+func (r RemoteCRIConfiguration) MulticriRuntimeName() string {
 	if _, ok := r.remoteCRIList["default"]; ok {
-		return BabelfishRuntimeHandler
+		return MulticriRuntimeHandler
 	}
 	return ""
 }

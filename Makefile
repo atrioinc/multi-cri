@@ -3,9 +3,9 @@ SHELL=/bin/bash -u
 
 export GOPATH ?= $(shell echo $(CURDIR) | sed -e 's,/src/.*,,')
 BASE    := ${PWD}
-PACKAGE  := cri-babelfish
+PACKAGE  := multi-cri
 
-ABSOLUTE_PROJECT  = $(GOPATH)/src/cri-babelfish
+ABSOLUTE_PROJECT  = $(GOPATH)/src/multi-cri
 PROJECT        := $(shell realpath --relative-to=$(CURDIR) $(ABSOLUTE_PROJECT))
 FIND_PROJECT_DIRS  = find $(PROJECT) -mindepth 1 -maxdepth 1 -type d -not -name vendor -not -name '_vendor-*'
 PROJECT_DIRS      := $(shell $(FIND_PROJECT_DIRS))
@@ -18,7 +18,7 @@ DEP ?= $(BIN)/dep
 
 
 GOIMPORTS ?= $(BIN)/goimports$(BIN_ARCH)
-GOIMPORTS_CMD = $(GOIMPORTS) -local cri-babelfish
+GOIMPORTS_CMD = $(GOIMPORTS) -local multi-cri
 
 .PHONY: all
 all:    build

@@ -15,9 +15,9 @@
 package builder
 
 import (
-	"cri-babelfish/pkg/cri/adapters/slurm/cmd"
-	"cri-babelfish/pkg/cri/auth"
-	"cri-babelfish/pkg/cri/store"
+	"multi-cri/pkg/cri/adapters/slurm/cmd"
+	"multi-cri/pkg/cri/auth"
+	"multi-cri/pkg/cri/store"
 	"fmt"
 	"path/filepath"
 )

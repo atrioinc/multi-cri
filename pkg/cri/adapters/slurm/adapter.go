@@ -15,9 +15,9 @@
 package slurm
 
 import (
-	"cri-babelfish/pkg/cri/adapters"
-	"cri-babelfish/pkg/cri/adapters/slurm/builder"
-	"cri-babelfish/pkg/cri/common"
+	"multi-cri/pkg/cri/adapters"
+	"multi-cri/pkg/cri/adapters/slurm/builder"
+	"multi-cri/pkg/cri/common"
 	"fmt"
 
 	runtimeApi "k8s.io/kubernetes/pkg/kubelet/apis/cri/runtime/v1alpha2"
@@ -26,7 +26,7 @@ import (
 const (
 	SLURMADAPTERVERSION = "0.1.0"
 	SLURMNAME           = "Adapter Slurm"
-	MOUNTHPATH          = "cri-babelfish"
+	MOUNTHPATH          = "multi-cri"
 	StdoutFile          = "stdout.out"
 	SterrFile           = "sterr.out"
 	RunScript           = "run.sh"

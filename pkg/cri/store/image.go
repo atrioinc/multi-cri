@@ -15,7 +15,7 @@
 package store
 
 import (
-	"cri-babelfish/pkg/cri/common/file"
+	"multi-cri/pkg/cri/common/file"
 	"fmt"
 	"strings"
 	"sync"
