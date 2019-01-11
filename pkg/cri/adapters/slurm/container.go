@@ -55,10 +55,10 @@ func (s SlurmAdapter) CreateContainer(cm *store.ContainerMetadata) error {
 	cm.Extra["RMVolumePath"] = mountPoint
 	cm.Extra["RMPath"] = fmt.Sprintf("%s/%s/%s", mountPoint, cm.PodSandbox.ID, cm.ID)
 
-	//Ensure container path exists in SLURM cluster
+	//Ensure container path exists in Slurm cluster
 	ensureRMPathExists(cm)
 
-	//Pull image in SLURM cluster
+	//Pull image in Slurm cluster
 	if err := s.Builder.PullImageInCluster(cm); err != nil {
 		return err
 	}
