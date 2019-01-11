@@ -91,41 +91,41 @@ Users can upload their images in a container volume and specify the path to that
 # Adapters
 Multi-cri aims to be a generic CRI in which different runtimes are supported by implementing different adapters.
 We can configure it by setting the `--adapter-name` variable.
-At the moment, there is an adapter for the SLURM workload manager.
+At the moment, there is an adapter for the Slurm workload manager.
 
 
-## SLURM adapter
-Slurm adapter supports batch job submissions to SLURM clusters.
+## Slurm adapter
+Slurm adapter supports batch job submissions to Slurm clusters.
 
 ### Configuration
-* **CRI_SLURM_MOUNT_PATH**: String  environment variable. It is the working directory in the SLURM cluster ("multi-cri" by default). This path is relative to the $HOME directory.
+* **CRI_SLURM_MOUNT_PATH**: String  environment variable. It is the working directory in the Slurm cluster ("multi-cri" by default). This path is relative to the $HOME directory.
 * **CRI_SLURM_IMAGE_REMOTE_MOUNT**: String environment variable. It is the path in which the images will be built (empty by default).
 They are built in the container persistent volume path by default.
-* **CRI_SLURM_BUILD_IN_CLUSTER**: Boolean environment variable which indicates to build images directly in the SLURM cluster (default false).
+* **CRI_SLURM_BUILD_IN_CLUSTER**: Boolean environment variable which indicates to build images directly in the Slurm cluster (default false).
 Images will build in the CRI node by default. 
 
 ### Features
 - MPI jobs are supported. Configured by environment variables.
-- SLURM cluster credentials are provided by environment variables.
-- Data transfer supported by using NFS. Containers mount NFS volumes, which are linked to the proper SLURM NFS mount.
+- Slurm cluster credentials are provided by environment variables.
+- Data transfer supported by using NFS. Containers mount NFS volumes, which are linked to the proper Slurm NFS mount.
 - Local image repository use images stored in the NFS container volume.
 
 ### Container environment variables
 Container job execution are configured by the following environment variables:
-* SLURM credentials:
+* Slurm credentials:
   * **CLUSTER_USERNAME**: user name to access the cluster.
   * **CLUSTER_PASSWORD**: user password to access the cluster.
   * **CLUSTER_HOST**: host/ip related to the cluster.
-* SLURM prerun configuration:
+* Slurm prerun configuration:
   * **CLUSTER_CONFIG**: Prerun script which will be executed before the run script defined by the container command. It must be passed as text.
-* SLURM job configuration:
+* Slurm job configuration:
   * **JOB_QUEUE**: queue in which submit the job.
-  * **JOB_GPU**: GPU configuration. Format "gpu[[:type]:count]". For instance: `gpu:kepler:2`. More information [SLURM GRES](https://slurm.schedmd.com/gres.html)
+  * **JOB_GPU**: GPU configuration. Format "gpu[[:type]:count]". For instance: `gpu:kepler:2`. More information [Slurm GRES](https://slurm.schedmd.com/gres.html)
   * **JOB_NUM_NODES**: number of nodes.
   * **JOB_NUM_CORES_NODE**: number of cores in each node.
   * **JOB_NUM_CORES**: number of cores to distribute through the nodes.
   * **JOB_NUM_TASKS_NODE**: num of tasks to allocate in one node.
-  * **JOB_CUSTOM_CONFIG**: custom SLURM environment variables. More information in [SLURM input environment variables](https://slurm.schedmd.com/sbatch.html).
+  * **JOB_CUSTOM_CONFIG**: custom Slurm environment variables. More information in [Slurm input environment variables](https://slurm.schedmd.com/sbatch.html).
  
 * MPI configuration: 
   * **MPI_VERSION**: MPI version. It is considered as MPI job when it has value. In case it is not set, the job won't be MPI.
@@ -137,8 +137,8 @@ Note: Container environment variables with **CLUSTER_***, **JOB_***, **KUBERNETE
 In order to properly work with SLURM, we must to configure the NFS in this way:
 * K8s side
   * Create NFS PersistentVolume(PV) and PersistentVolumeClaim(PVC) to the NFS path (`/<NFS PATH>`).
-  * Mount the volume in container with `mountPath: "multicri"`. So the CRI will know which is the SLURM volume.
-* SLURM side
+  * Mount the volume in container with `mountPath: "multicri"`. So the CRI will know which is the Slurm volume.
+* Slurm side
   * Mount the NFS path, `/<NFS PATH>`, on the `$HOME/<CRI_SLURM_MOUNT_PATH>/<VOLUME CLAIM NAME>`.
 
 ## Job Results
@@ -149,9 +149,9 @@ mounting the volume in a new pod (for example, busybox) and use `kubectl cp <new
 
 ### For example
 
-* SLURM NFS configuration.
+* Slurm NFS configuration.
 
-It is **important** to setup the mount point in SLURM as `$HOME/<CRI_SLURM_MOUNT_PATH>/<VOLUME CLAIM NAME>`, because the adapter will use it as working directory.
+It is **important** to setup the mount point in Slurm as `$HOME/<CRI_SLURM_MOUNT_PATH>/<VOLUME CLAIM NAME>`, because the adapter will use it as working directory.
 ```
 sudo mount <NFS server IP>:/mnt/storage/multicri-nfs /home/jorge/multi-cri/nfs-vol1
 ```
@@ -188,7 +188,7 @@ sudo mount <NFS server IP>:/mnt/storage/multicri-nfs /home/jorge/multi-cri/nfs-v
         storage: 10Gi
   ```
 
-### SLURM simple batch job with volume
+### Slurm simple batch job with volume
 * Configure credentials through environment variables, they can be set, for example, by using K8s secrets.
 * Use docker image repository.
 * Use NFS data transfer. It mounts a Persistent Volume Claim called `nfs-vol1`
@@ -253,7 +253,7 @@ spec:
           claimName: nfs-vol1
 ```
 
-### MPI SLURM Job specification without NFS volume
+### MPI Slurm Job specification without NFS volume
 
 ```
 apiVersion: batch/v1

@@ -295,7 +295,7 @@ func (s SlurmCmd) batchScript(config *JobConfig) error {
 		}
 		err = s.CopyTo(prerunScript, prerun)
 		if err != nil {
-			return fmt.Errorf("Error copying prerun file to SLURM cluster. %s ", err)
+			return fmt.Errorf("Error copying prerun file to Slurm cluster. %s ", err)
 		}
 	}
 	//Batch
@@ -306,7 +306,7 @@ func (s SlurmCmd) batchScript(config *JobConfig) error {
 	}
 	err = s.CopyTo(batchLocalPath, batchScript)
 	if err != nil {
-		return fmt.Errorf("Error copying batch file to SLURM cluster. %s ", err)
+		return fmt.Errorf("Error copying batch file to Slurm cluster. %s ", err)
 	}
 
 	//Run script
@@ -316,7 +316,7 @@ func (s SlurmCmd) batchScript(config *JobConfig) error {
 	}
 	err = s.CopyTo(runLocalScript, config.Script)
 	if err != nil {
-		return fmt.Errorf("Error copying run file to SLURM cluster. %s ", err)
+		return fmt.Errorf("Error copying run file to Slurm cluster. %s ", err)
 	}
 	return nil
 }
@@ -528,7 +528,7 @@ func (s SlurmCmd) PullImageScript(command, imagePath, scriptPath string, env map
 	}
 	err = s.CopyTo(filePath, scriptPath)
 	if err != nil {
-		return size, fmt.Errorf("Error copying run file to SLURM cluster. %s ", err)
+		return size, fmt.Errorf("Error copying run file to Slurm cluster. %s ", err)
 	}
 	out, err := s.ExecCmd(scriptPath)
 	if err != nil {
