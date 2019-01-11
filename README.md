@@ -75,9 +75,9 @@ Docker image repository is supported, at least for those adapters which are base
 
 In the following, we show the image pull workflow for docker repository images:
 
-- **User specify the image name** including the repository name (`docker-repository`). For example: `docker-repository.perl`.
-- **CRI parse the image name** to get the right docker image url. For example it will generate the url `docker://perl`.
-- **CRI builds the image** by using the singularity client (singularity build `docker://perl`),
+- **User specify the image name** including the repository name (`docker-repository`). For example: `docker-repository.alpine:3.8`.
+- **CRI parse the image name** to get the right docker image url. For example it will generate the url `docker://alpine:3.8`.
+- **CRI builds the image** by using the singularity client (singularity build `docker://alpine:3.8`),
 registers the  image in the CRI image pool and stores it in the image storage folder.
 
 It supports docker private respositories by using ImageSecret credentials.
@@ -196,7 +196,7 @@ sudo mount <NFS server IP>:/mnt/storage/multicri-nfs /home/jorge/multi-cri/nfs-v
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: job-perl-slurm-vol-pod
+  name: job-alpine-slurm-vol-pod
 spec:
   backoffLimit: 1
   template:
@@ -207,7 +207,7 @@ spec:
       runtimeClassName: multicri
       containers:
       - name: job-slurm-container
-        image: multicri/docker.perl.img:latest
+        image: multicri/docker-repository.alpine:3.8
         command: ["sleep", "60", "&&", "ls", "/"]
         env:
         - name: CLUSTER_USERNAME
@@ -259,7 +259,7 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: job-perl-slurm-pod
+  name: job-alpine-slurm-pod
 spec:
   backoffLimit: 1
   template:
@@ -270,7 +270,7 @@ spec:
       runtimeClassName: multicri
       containers:
       - name: job-slurm-container
-        image: multicri/docker.perl:latest
+        image: multicri/docker-repository.alpine:3.8
         command: ["ls", "/"]
         env:
         - name: MPI_VERSION
